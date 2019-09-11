@@ -6,6 +6,16 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.Random;
 import Game.GameStates.State;
+import java.io.IOException;
+import java.io.InputStream;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+
 
 /**
  * Created by AlexVR on 7/2/2018.
@@ -23,6 +33,12 @@ public class Player {
 	public static int score;
 	public int i;
 	public String direction;//is your first name one?
+	//music
+	private InputStream audioFile;
+	private AudioInputStream audioStream;
+	private AudioFormat format;
+	private DataLine.Info info;
+	private Clip audioClip;
 
 	public Player(Handler handler){
 		this.handler = handler;
@@ -121,12 +137,31 @@ public class Player {
 			handler.getWorld().body.removeLast();
 			handler.getWorld().body.addFirst(new Tail(x, y,handler));
 		}
-		 //self collision 
-        for (i=0; i< handler.getWorld().body.size();i++) {
-        	if((xCoord==handler.getWorld().body.get(i).x)&&(yCoord==handler.getWorld().body.get(i).y)) {
-        		State.setState(handler.getGame().gameoverState);
-        	}
-        }
+		//self collision 
+		for (i=0; i< handler.getWorld().body.size();i++) {
+			if((xCoord==handler.getWorld().body.get(i).x)&&(yCoord==handler.getWorld().body.get(i).y)) {
+				try {
+
+		            audioFile = getClass().getResourceAsStream("/music/Gameover.wav");
+		            audioStream = AudioSystem.getAudioInputStream(audioFile);
+		            format = audioStream.getFormat();
+		            info = new DataLine.Info(Clip.class, format);
+		            audioClip = (Clip) AudioSystem.getLine(info);
+		            audioClip.open(audioStream);
+		            audioClip.start();
+
+
+		        } catch (UnsupportedAudioFileException e) {
+		            e.printStackTrace();
+		        } catch (IOException e) {
+		            e.printStackTrace();
+		        } catch (LineUnavailableException e) {
+		            e.printStackTrace();
+		        }
+				State.setState(handler.getGame().gameoverState);
+				
+			}
+		}
 
 	}
 
@@ -141,8 +176,8 @@ public class Player {
 							(j*handler.getWorld().GridPixelsize),
 							handler.getWorld().GridPixelsize,
 							handler.getWorld().GridPixelsize); g.setFont(new Font("Impact",Font.PLAIN,15));
-		                    g.setColor(Color.green);
-					  g.drawString("Score: " + score, 0,15);
+							g.setColor(Color.green);
+							g.drawString("Score: " + score, 0,15);
 				}
 
 			}
@@ -258,6 +293,24 @@ public class Player {
 		handler.getWorld().body.addLast(tail);
 		handler.getWorld().playerLocation[tail.x][tail.y] = true;
 		score++;
+		 try {
+
+	            audioFile = getClass().getResourceAsStream("/music/Eating.wav");
+	            audioStream = AudioSystem.getAudioInputStream(audioFile);
+	            format = audioStream.getFormat();
+	            info = new DataLine.Info(Clip.class, format);
+	            audioClip = (Clip) AudioSystem.getLine(info);
+	            audioClip.open(audioStream);
+	            audioClip.start();
+
+
+	        } catch (UnsupportedAudioFileException e) {
+	            e.printStackTrace();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        } catch (LineUnavailableException e) {
+	            e.printStackTrace();
+	        }
 	}
 
 	public void kill(){
@@ -266,7 +319,7 @@ public class Player {
 			for (int j = 0; j < handler.getWorld().GridWidthHeightPixelCount; j++) {
 
 				handler.getWorld().playerLocation[i][j]=false;
-				
+
 
 			}
 		}

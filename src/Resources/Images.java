@@ -11,6 +11,7 @@ import java.io.IOException;
 public class Images {
 
 
+
     public static BufferedImage[] butstart;
     public static BufferedImage title;
     public static BufferedImage Pause;
@@ -19,28 +20,34 @@ public class Images {
     public static BufferedImage[] Options;
     public static ImageIcon icon;
     public static BufferedImage gameover;
-
+    public static BufferedImage[] Restart;
+    
+   
     public Images() {
 
-        butstart = new BufferedImage[3];
+        butstart = new BufferedImage[2];
         Resume = new BufferedImage[2];
         BTitle = new BufferedImage[2];
         Options = new BufferedImage[2];
+        Restart = new BufferedImage[2];
 
         try {
-
-            title = ImageIO.read(getClass().getResourceAsStream("/Sheets/Title.png"));
+        	Restart[0]=ImageIO.read(getClass().getResourceAsStream("/Buttons/Restart1.png"));
+        	Restart[1]=ImageIO.read(getClass().getResourceAsStream("/Buttons/Restart2.png"));
             gameover=ImageIO.read(getClass().getResourceAsStream("/Sheets/Gameover.png"));
-            Pause = ImageIO.read(getClass().getResourceAsStream("/Buttons/Pause.png"));
-            Resume[0] = ImageIO.read(getClass().getResourceAsStream("/Buttons/Resume.png"));
-            Resume[1] = ImageIO.read(getClass().getResourceAsStream("/Buttons/ResumeP.png"));
-            BTitle[0] = ImageIO.read(getClass().getResourceAsStream("/Buttons/BTitle.png"));
-            BTitle[1] = ImageIO.read(getClass().getResourceAsStream("/Buttons/BTitleP.png"));
-            Options[0] = ImageIO.read(getClass().getResourceAsStream("/Buttons/Options.png"));
-            Options[1] = ImageIO.read(getClass().getResourceAsStream("/Buttons/OptionsP.png"));
-            butstart[0]= ImageIO.read(getClass().getResourceAsStream("/Buttons/NormBut.png"));//normbut
-            butstart[1]= ImageIO.read(getClass().getResourceAsStream("/Buttons/HoverBut.png"));//hoverbut
-            butstart[2]= ImageIO.read(getClass().getResourceAsStream("/Buttons/ClickedBut.png"));//clickbut
+            title = ImageIO.read(getClass().getResourceAsStream("/Sheets/Title.png"));
+            Pause = ImageIO.read(getClass().getResourceAsStream("/Sheets/Pause.png"));
+            Resume[0] = ImageIO.read(getClass().getResourceAsStream("/Buttons/Resume1.png"));
+            Resume[1] = ImageIO.read(getClass().getResourceAsStream("/Buttons/Resume2.png"));
+            BTitle[0] = ImageIO.read(getClass().getResourceAsStream("/Buttons/Title1.png"));
+            BTitle[1] = ImageIO.read(getClass().getResourceAsStream("/Buttons/Title2.png"));
+            Options[0] = ImageIO.read(getClass().getResourceAsStream("/Buttons/Options1.png"));
+            Options[1] = ImageIO.read(getClass().getResourceAsStream("/Buttons/Options2.png"));
+            butstart[0]= ImageIO.read(getClass().getResourceAsStream("/Buttons/start1.png"));//normbut
+            butstart[1]= ImageIO.read(getClass().getResourceAsStream("/Buttons/start2.png"));//hoverbut            
+           
+
+           
 
             icon =  new ImageIcon(ImageIO.read(getClass().getResourceAsStream("/Sheets/icon.png")));
 
