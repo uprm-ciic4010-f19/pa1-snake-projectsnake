@@ -20,6 +20,7 @@ public class Player {
 	public int yCoord;
 
 	public int moveCounter;
+	public static int score;
 	public int i;
 	public String direction;//is your first name one?
 
@@ -28,6 +29,7 @@ public class Player {
 		xCoord = 0;
 		yCoord = 0;
 		moveCounter = 0;
+		score=0;
 		direction= "Right";
 		justAte = false;
 		lenght= 1;
@@ -74,6 +76,7 @@ public class Player {
 
 	public void checkCollisionAndMove(){
 		handler.getWorld().playerLocation[xCoord][yCoord]=false;
+		int i= 0;
 		int x = xCoord;
 		int y = yCoord;
 		switch (direction){
@@ -118,6 +121,12 @@ public class Player {
 			handler.getWorld().body.removeLast();
 			handler.getWorld().body.addFirst(new Tail(x, y,handler));
 		}
+		 //self collision 
+        for (i=0; i< handler.getWorld().body.size();i++) {
+        	if((xCoord==handler.getWorld().body.get(i).x)&&(yCoord==handler.getWorld().body.get(i).y)) {
+        		State.setState(handler.getGame().gameoverState);
+        	}
+        }
 
 	}
 
@@ -131,7 +140,9 @@ public class Player {
 					g.fillRect((i*handler.getWorld().GridPixelsize),
 							(j*handler.getWorld().GridPixelsize),
 							handler.getWorld().GridPixelsize,
-							handler.getWorld().GridPixelsize);
+							handler.getWorld().GridPixelsize); g.setFont(new Font("Impact",Font.PLAIN,15));
+		                    g.setColor(Color.green);
+					  g.drawString("Score: " + score, 0,15);
 				}
 
 			}
@@ -246,6 +257,7 @@ public class Player {
 		}
 		handler.getWorld().body.addLast(tail);
 		handler.getWorld().playerLocation[tail.x][tail.y] = true;
+		score++;
 	}
 
 	public void kill(){
@@ -254,6 +266,7 @@ public class Player {
 			for (int j = 0; j < handler.getWorld().GridWidthHeightPixelCount; j++) {
 
 				handler.getWorld().playerLocation[i][j]=false;
+				
 
 			}
 		}

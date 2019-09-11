@@ -18,6 +18,7 @@ public class Images {
     public static BufferedImage[] BTitle;
     public static BufferedImage[] Options;
     public static ImageIcon icon;
+    public static BufferedImage gameover;
 
     public Images() {
 
@@ -29,6 +30,7 @@ public class Images {
         try {
 
             title = ImageIO.read(getClass().getResourceAsStream("/Sheets/Title.png"));
+            gameover=ImageIO.read(getClass().getResourceAsStream("/Sheets/Gameover.png"));
             Pause = ImageIO.read(getClass().getResourceAsStream("/Buttons/Pause.png"));
             Resume[0] = ImageIO.read(getClass().getResourceAsStream("/Buttons/Resume.png"));
             Resume[1] = ImageIO.read(getClass().getResourceAsStream("/Buttons/ResumeP.png"));
