@@ -1,6 +1,7 @@
 package Game.Entities.Dynamic;
 
 import Main.Handler;
+import java.lang.Math;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -55,18 +56,18 @@ public class Player {
 
 	public void tick(){
 		moveCounter++;
-		if(moveCounter>=i){
+		if (moveCounter>=i){
 			checkCollisionAndMove();
-			moveCounter=-2;
+			moveCounter = -2;
 		}
 		if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_UP)){
 			if(direction != "Down") //Prevent Backtracking
 				direction="Up";
-
-		}if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_DOWN)){
+		}
+			if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_DOWN)){
 			if(direction != "Up")  //Prevent Backtracking
 				direction="Down";
-
+			
 		}if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_LEFT)){
 			if(direction != "Right") //Prevent Backtracking
 				direction="Left";
@@ -86,7 +87,6 @@ public class Player {
 		}if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_ESCAPE)) {
 			State.setState(handler.getGame().pauseState);
 		}
-
 	}
 
 
@@ -98,28 +98,28 @@ public class Player {
 		switch (direction){
 		case "Left":
 			if(xCoord==0){
-				kill();
+				xCoord = 59;
 			}else{
 				xCoord--;
 			}
 			break;
 		case "Right":
 			if(xCoord==handler.getWorld().GridWidthHeightPixelCount-1){
-				kill();
+				xCoord = 0;
 			}else{
 				xCoord++;
 			}
 			break;
 		case "Up":
 			if(yCoord==0){
-				kill();
+				yCoord = 59;
 			}else{
 				yCoord--;
 			}
 			break;
 		case "Down":
 			if(yCoord==handler.getWorld().GridWidthHeightPixelCount-1){
-				kill();
+				yCoord = 0;
 			}else{
 				yCoord++;
 			}
@@ -292,7 +292,8 @@ public class Player {
 		}
 		handler.getWorld().body.addLast(tail);
 		handler.getWorld().playerLocation[tail.x][tail.y] = true;
-		score++;
+		score += (int) Math.sqrt(2*score +1);
+		i = i - 3;
 		 try {
 
 	            audioFile = getClass().getResourceAsStream("/music/Eating.wav");
