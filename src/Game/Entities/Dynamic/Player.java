@@ -209,7 +209,7 @@ public class Player {
 					g.setFont(new Font("Apple Symbols",Font.PLAIN,20));
 					g.setColor(Color.green);
 					g.drawString("Score: " + score, 0,20);
-					g.drawString("High Score: " + highScore, 460, 20);
+					g.drawString("High Score: " + highScore, 455, 20);
 
 
 				}
