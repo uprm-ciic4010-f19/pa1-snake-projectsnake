@@ -16,6 +16,7 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import Game.Entities.Static.Apple;
 
 
 /**
@@ -32,6 +33,7 @@ public class Player {
 
 	public int moveCounter;
 	public static int score;
+	public int steps;
 	public int i;
 	public String direction;//is your first name one?
 	//music
@@ -45,12 +47,13 @@ public class Player {
 		this.handler = handler;
 		xCoord = 0;
 		yCoord = 0;
-		moveCounter = 0;
+		moveCounter = 3;
 		score=0;
 		direction= "Right";
 		justAte = false;
 		lenght= 1;
-		i=1;
+		i=3;
+		steps=0;
 
 	}
 
@@ -58,7 +61,7 @@ public class Player {
 		moveCounter++;
 		if (moveCounter>=i){
 			checkCollisionAndMove();
-			moveCounter = -2;
+			moveCounter = 0;
 		}
 		if(handler.getKeyManager().keyJustPressed(KeyEvent.VK_UP)){
 			if(direction != "Down") //Prevent Backtracking
@@ -97,6 +100,7 @@ public class Player {
 		int y = yCoord;
 		switch (direction){
 		case "Left":
+			steps++;
 			if(xCoord==0){
 				xCoord = 59;
 			}else{
@@ -104,6 +108,7 @@ public class Player {
 			}
 			break;
 		case "Right":
+			steps++;
 			if(xCoord==handler.getWorld().GridWidthHeightPixelCount-1){
 				xCoord = 0;
 			}else{
@@ -111,6 +116,7 @@ public class Player {
 			}
 			break;
 		case "Up":
+			steps++;
 			if(yCoord==0){
 				yCoord = 59;
 			}else{
@@ -118,6 +124,7 @@ public class Player {
 			}
 			break;
 		case "Down":
+			steps++;
 			if(yCoord==handler.getWorld().GridWidthHeightPixelCount-1){
 				yCoord = 0;
 			}else{
@@ -162,22 +169,46 @@ public class Player {
 				
 			}
 		}
-
+		
 	}
 
-	public void render(Graphics g,Boolean[][] playeLocation){
+	public void render(Graphics g, Boolean[][] playeLocation){
 		Random r = new Random();
 		for (int i = 0; i < handler.getWorld().GridWidthHeightPixelCount; i++) {
+
 			for (int j = 0; j < handler.getWorld().GridWidthHeightPixelCount; j++) {
 				g.setColor(Color.GREEN);
 
-				if(playeLocation[i][j]||handler.getWorld().appleLocation[i][j]){
+				if(playeLocation[i][j]){
 					g.fillRect((i*handler.getWorld().GridPixelsize),
 							(j*handler.getWorld().GridPixelsize),
 							handler.getWorld().GridPixelsize,
-							handler.getWorld().GridPixelsize); g.setFont(new Font("Impact",Font.PLAIN,15));
-							g.setColor(Color.green);
-							g.drawString("Score: " + score, 0,15);
+							handler.getWorld().GridPixelsize);
+				}
+
+				if(steps == 300)
+				{
+					Apple.Goodapple(false);
+				} 
+				if(Apple.isGood())
+				{
+					g.setColor(Color.CYAN);	
+				}
+				else
+				{
+					g.setColor(Color.BLACK);
+				}
+
+				if(handler.getWorld().appleLocation[i][j]){
+					g.fillRect((i*handler.getWorld().GridPixelsize),
+							(j*handler.getWorld().GridPixelsize),
+							handler.getWorld().GridPixelsize,
+							handler.getWorld().GridPixelsize);
+					g.setFont(new Font("Apple Symbols",Font.PLAIN,20));
+					g.setColor(Color.green);
+					g.drawString("Score: " + score, 0,20);
+
+
 				}
 
 			}
@@ -186,115 +217,123 @@ public class Player {
 
 	}
 
+
 	public void Eat(){
-		lenght++;
 		Tail tail= null;
 		handler.getWorld().appleLocation[xCoord][yCoord]=false;
 		handler.getWorld().appleOnBoard=false;
-		switch (direction){
-		case "Left":
-			if( handler.getWorld().body.isEmpty()){
-				if(this.xCoord!=handler.getWorld().GridWidthHeightPixelCount-1){
-					tail = new Tail(this.xCoord+1,this.yCoord,handler);
-				}else{
-					if(this.yCoord!=0){
-						tail = new Tail(this.xCoord,this.yCoord-1,handler);
-					}else{
-						tail =new Tail(this.xCoord,this.yCoord+1,handler);
-					}
-				}
-			}else{
-				if(handler.getWorld().body.getLast().x!=handler.getWorld().GridWidthHeightPixelCount-1){
-					tail=new Tail(handler.getWorld().body.getLast().x+1,this.yCoord,handler);
-				}else{
-					if(handler.getWorld().body.getLast().y!=0){
-						tail=new Tail(handler.getWorld().body.getLast().x,this.yCoord-1,handler);
-					}else{
-						tail=new Tail(handler.getWorld().body.getLast().x,this.yCoord+1,handler);
+	
+		if(Apple.isGood())
+		{
+			
+			score += (int) Math.sqrt((2 * score) + 1);
+			lenght++;
+			i -=1;
 
-					}
-				}
-
-			}
-			break;
-		case "Right":
-			if( handler.getWorld().body.isEmpty()){
-				if(this.xCoord!=0){
-					tail=new Tail(this.xCoord-1,this.yCoord,handler);
-				}else{
-					if(this.yCoord!=0){
-						tail=new Tail(this.xCoord,this.yCoord-1,handler);
+			switch (direction){
+			case "Left":
+				if( handler.getWorld().body.isEmpty()){
+					if(this.xCoord!=handler.getWorld().GridWidthHeightPixelCount-1){
+						tail = new Tail(this.xCoord+1,this.yCoord,handler);
 					}else{
-						tail=new Tail(this.xCoord,this.yCoord+1,handler);
+						if(this.yCoord!=0){
+							tail = new Tail(this.xCoord,this.yCoord-1,handler);
+						}else{
+							tail =new Tail(this.xCoord,this.yCoord+1,handler);
+						}
 					}
+				}else{
+					if(handler.getWorld().body.getLast().x!=handler.getWorld().GridWidthHeightPixelCount-1){
+						tail=new Tail(handler.getWorld().body.getLast().x+1,this.yCoord,handler);
+					}else{
+						if(handler.getWorld().body.getLast().y!=0){
+							tail=new Tail(handler.getWorld().body.getLast().x,this.yCoord-1,handler);
+						}else{
+							tail=new Tail(handler.getWorld().body.getLast().x,this.yCoord+1,handler);
+
+						}
+					}
+
 				}
-			}else{
-				if(handler.getWorld().body.getLast().x!=0){
-					tail=(new Tail(handler.getWorld().body.getLast().x-1,this.yCoord,handler));
+				break;
+			case "Right":
+				if( handler.getWorld().body.isEmpty()){
+					if(this.xCoord!=0){
+						tail=new Tail(this.xCoord-1,this.yCoord,handler);
+					}else{
+						if(this.yCoord!=0){
+							tail=new Tail(this.xCoord,this.yCoord-1,handler);
+						}else{
+							tail=new Tail(this.xCoord,this.yCoord+1,handler);
+						}
+					}
+				}else{
+					if(handler.getWorld().body.getLast().x!=0){
+						tail=(new Tail(handler.getWorld().body.getLast().x-1,this.yCoord,handler));
+					}else{
+						if(handler.getWorld().body.getLast().y!=0){
+							tail=(new Tail(handler.getWorld().body.getLast().x,this.yCoord-1,handler));
+						}else{
+							tail=(new Tail(handler.getWorld().body.getLast().x,this.yCoord+1,handler));
+						}
+					}
+
+				}
+				break;
+			case "Up":
+				if( handler.getWorld().body.isEmpty()){
+					if(this.yCoord!=handler.getWorld().GridWidthHeightPixelCount-1){
+						tail=(new Tail(this.xCoord,this.yCoord+1,handler));
+					}else{
+						if(this.xCoord!=0){
+							tail=(new Tail(this.xCoord-1,this.yCoord,handler));
+						}else{
+							tail=(new Tail(this.xCoord+1,this.yCoord,handler));
+						}
+					}
+				}else{
+					if(handler.getWorld().body.getLast().y!=handler.getWorld().GridWidthHeightPixelCount-1){
+						tail=(new Tail(handler.getWorld().body.getLast().x,this.yCoord+1,handler));
+					}else{
+						if(handler.getWorld().body.getLast().x!=0){
+							tail=(new Tail(handler.getWorld().body.getLast().x-1,this.yCoord,handler));
+						}else{
+							tail=(new Tail(handler.getWorld().body.getLast().x+1,this.yCoord,handler));
+						}
+					}
+
+				}
+				break;
+			case "Down":
+				if( handler.getWorld().body.isEmpty()){
+					if(this.yCoord!=0){
+						tail=(new Tail(this.xCoord,this.yCoord-1,handler));
+					}else{
+						if(this.xCoord!=0){
+							tail=(new Tail(this.xCoord-1,this.yCoord,handler));
+						}else{
+							tail=(new Tail(this.xCoord+1,this.yCoord,handler));
+						} System.out.println("Tu biscochito");
+					}
 				}else{
 					if(handler.getWorld().body.getLast().y!=0){
 						tail=(new Tail(handler.getWorld().body.getLast().x,this.yCoord-1,handler));
 					}else{
-						tail=(new Tail(handler.getWorld().body.getLast().x,this.yCoord+1,handler));
+						if(handler.getWorld().body.getLast().x!=0){
+							tail=(new Tail(handler.getWorld().body.getLast().x-1,this.yCoord,handler));
+						}else{
+							tail=(new Tail(handler.getWorld().body.getLast().x+1,this.yCoord,handler));
+						}
 					}
-				}
 
+				}
+				break;
 			}
-			break;
-		case "Up":
-			if( handler.getWorld().body.isEmpty()){
-				if(this.yCoord!=handler.getWorld().GridWidthHeightPixelCount-1){
-					tail=(new Tail(this.xCoord,this.yCoord+1,handler));
-				}else{
-					if(this.xCoord!=0){
-						tail=(new Tail(this.xCoord-1,this.yCoord,handler));
-					}else{
-						tail=(new Tail(this.xCoord+1,this.yCoord,handler));
-					}
-				}
-			}else{
-				if(handler.getWorld().body.getLast().y!=handler.getWorld().GridWidthHeightPixelCount-1){
-					tail=(new Tail(handler.getWorld().body.getLast().x,this.yCoord+1,handler));
-				}else{
-					if(handler.getWorld().body.getLast().x!=0){
-						tail=(new Tail(handler.getWorld().body.getLast().x-1,this.yCoord,handler));
-					}else{
-						tail=(new Tail(handler.getWorld().body.getLast().x+1,this.yCoord,handler));
-					}
-				}
 
-			}
-			break;
-		case "Down":
-			if( handler.getWorld().body.isEmpty()){
-				if(this.yCoord!=0){
-					tail=(new Tail(this.xCoord,this.yCoord-1,handler));
-				}else{
-					if(this.xCoord!=0){
-						tail=(new Tail(this.xCoord-1,this.yCoord,handler));
-					}else{
-						tail=(new Tail(this.xCoord+1,this.yCoord,handler));
-					} System.out.println("Tu biscochito");
-				}
-			}else{
-				if(handler.getWorld().body.getLast().y!=0){
-					tail=(new Tail(handler.getWorld().body.getLast().x,this.yCoord-1,handler));
-				}else{
-					if(handler.getWorld().body.getLast().x!=0){
-						tail=(new Tail(handler.getWorld().body.getLast().x-1,this.yCoord,handler));
-					}else{
-						tail=(new Tail(handler.getWorld().body.getLast().x+1,this.yCoord,handler));
-					}
-				}
 
-			}
-			break;
-		}
-		handler.getWorld().body.addLast(tail);
-		handler.getWorld().playerLocation[tail.x][tail.y] = true;
-		score += (int) Math.sqrt(2*score +1);
-		i = i - 3;
-		 try {
+			handler.getWorld().body.addLast(tail);
+			handler.getWorld().playerLocation[tail.x][tail.y] = true;
+			try {
 
 	            audioFile = getClass().getResourceAsStream("/music/Eating.wav");
 	            audioStream = AudioSystem.getAudioInputStream(audioFile);
@@ -312,7 +351,52 @@ public class Player {
 	        } catch (LineUnavailableException e) {
 	            e.printStackTrace();
 	        }
+
+
+		}
+		else
+		{
+			score -= (int) Math.sqrt((2 * score) + 1);
+			if(score < 0 )
+			{
+				score = 0;
+			}
+
+			i +=1;
+			
+			lenght--;
+			
+			handler.getWorld().playerLocation[handler.getWorld().body.getLast().x][handler.getWorld().body.getLast().y] = false;
+			handler.getWorld().body.removeLast();
+			
+			try {
+
+	            audioFile = getClass().getResourceAsStream("/music/eww.wav");
+	            audioStream = AudioSystem.getAudioInputStream(audioFile);
+	            format = audioStream.getFormat();
+	            info = new DataLine.Info(Clip.class, format);
+	            audioClip = (Clip) AudioSystem.getLine(info);
+	            audioClip.open(audioStream);
+	            audioClip.start();
+
+
+	        } catch (UnsupportedAudioFileException e) {
+	            e.printStackTrace();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        } catch (LineUnavailableException e) {
+	            e.printStackTrace();
+	        }
+
+		}
+		Apple.Goodapple(true);
+		steps = 0;
+
+
+
 	}
+		 
+
 
 	public void kill(){
 		lenght = 0;

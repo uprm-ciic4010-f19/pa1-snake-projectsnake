@@ -8,7 +8,7 @@ import Main.Handler;
 public class Apple {
 
     private Handler handler;
-
+    private static boolean Applestate = true;
     public int xCoord;
     public int yCoord;
 
@@ -17,6 +17,18 @@ public class Apple {
         this.xCoord=x;
         this.yCoord=y;
     }
+     
+    public static void Goodapple(boolean state)
+    {
+    	Applestate = state;
+    }
 
 
-}
+    public static boolean isGood()
+    {
+    	return Applestate;
+    }
+    }
+
+
+
