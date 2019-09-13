@@ -47,12 +47,12 @@ public class Player {
 		this.handler = handler;
 		xCoord = 0;
 		yCoord = 0;
-		moveCounter = 3;
+		moveCounter = 0;
 		score=0;
 		direction= "Right";
 		justAte = false;
 		lenght= 1;
-		i=3;
+		i=10;
 		steps=0;
 
 	}
