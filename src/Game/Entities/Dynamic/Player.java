@@ -33,6 +33,7 @@ public class Player {
 
 	public int moveCounter;
 	public static int score;
+	public static int highScore;
 	public int steps;
 	public int i;
 	public String direction;//is your first name one?
@@ -49,6 +50,7 @@ public class Player {
 		yCoord = 0;
 		moveCounter = 0;
 		score=0;
+		highScore=0;
 		direction= "Right";
 		justAte = false;
 		lenght= 1;
@@ -207,6 +209,7 @@ public class Player {
 					g.setFont(new Font("Apple Symbols",Font.PLAIN,20));
 					g.setColor(Color.green);
 					g.drawString("Score: " + score, 0,20);
+					g.drawString("High Score: " + highScore, 0, 40);
 
 
 				}
@@ -225,8 +228,13 @@ public class Player {
 	
 		if(Apple.isGood())
 		{
-			
 			score += (int) Math.sqrt((2 * score) + 1);
+			if (highScore > score) {
+				//Don't change the highScore
+			}
+			else if (score >= score) {
+				highScore = score;	
+			}
 			lenght++;
 			i -=1;
 
