@@ -364,11 +364,14 @@ public class Player {
 
 			i +=1;
 			
-			lenght--;
-			
-			handler.getWorld().playerLocation[handler.getWorld().body.getLast().x][handler.getWorld().body.getLast().y] = false;
-			handler.getWorld().body.removeLast();
-			
+			if (lenght == 1) {
+				kill();
+				State.setState(handler.getGame().gameoverState);
+			}else {
+				lenght--;
+				handler.getWorld().playerLocation[handler.getWorld().body.getLast().x][handler.getWorld().body.getLast().y] = false;
+				handler.getWorld().body.removeLast();
+			}
 			try {
 
 	            audioFile = getClass().getResourceAsStream("/music/eww.wav");
