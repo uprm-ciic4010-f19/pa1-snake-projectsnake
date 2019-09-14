@@ -54,7 +54,7 @@ public class Player {
 		direction= "Right";
 		justAte = false;
 		lenght= 1;
-		i=10;
+		i=8;
 		steps=0;
 
 	}
